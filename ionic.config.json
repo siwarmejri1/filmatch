@@ -1,0 +1,7 @@
+{
+  "name": "filmatch",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular-standalone"
+}
