@@ -1,6 +1,8 @@
 import { Injectable, inject } from '@angular/core';
 import { Auth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from '@angular/fire/auth';
 import { Firestore, doc, setDoc, getDoc } from '@angular/fire/firestore';
+import { UserProfile } from '../models';
+
 /* Hedha service mta3 l'auth mte3na ly besh ngériou byha l'inscription 
 *w l connexion w l déconnexion m3a l firebase w tsavi kol utilisateur fel firestore */
 
@@ -37,5 +39,15 @@ throw new Error('Compte désactivé. Contactez l\'administrateur.');
 // ydeconnecti l'user mte3na
 logout() {
 return signOut(this.auth);
+}
+
+
+// hedha besh yjib l profil mtaa l'user ly connecté w ken mahoush connecté yjib null
+async currentProfile(): Promise<UserProfile | null> { 
+await this.auth.authStateReady(); // yesstana l'auth mtaa l firebase besh ykoun ready
+const u = this.auth.currentUser;
+if (!u) return null;
+const s = await getDoc(doc(this.fs, 'users', u.uid));
+return s.exists() ? ({ uid: u.uid, ...s.data() } as UserProfile) : null;
 }
 }
