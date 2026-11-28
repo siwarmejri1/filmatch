@@ -41,4 +41,13 @@ throw new Error('Compte désactivé. Contactez l\'administrateur.');
 logout() {
 return signOut(this.auth);
 }
+
+// hedha besh yjib l profil mtaa l'user ly connecté w ken mahoush connecté yjib null
+async currentProfile(): Promise<UserProfile | null> { 
+await this.auth.authStateReady(); // yesstana l'auth mtaa l firebase besh ykoun ready
+const u = this.auth.currentUser;
+if (!u) return null;
+const s = await getDoc(doc(this.fs, 'users', u.uid));
+return s.exists() ? ({ uid: u.uid, ...s.data() } as UserProfile) : null;
+}
 }
